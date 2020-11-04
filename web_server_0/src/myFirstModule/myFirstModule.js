@@ -1,0 +1,1 @@
+exports.myHello = () => "Hello World!";

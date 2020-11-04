@@ -1,23 +1,22 @@
 {
-  "name": "first",
-  "version": "1.0.0",
-  "description": "new project",
-  "main": "hello.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node hello.js"
-  },
-  "author": "Rushi Rami",
-  "license": "ISC",
-  "dependencies": {
-    "fs": "0.0.1-security"
-  },
-  "devDependencies": {
-    "eslint": "^7.12.1",
-    "eslint-config-standard": "^16.0.1",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.2"
-  }
+    "name": "first",
+    "version": "1.0.0",
+    "description": "new project",
+    "main": "server.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Rushi Rami",
+    "license": "ISC",
+    "dependencies": {
+        "fs": "0.0.1-security"
+    },
+    "devDependencies": {
+        "eslint": "^7.12.1",
+        "eslint-config-standard": "^16.0.1",
+        "eslint-plugin-import": "^2.22.1",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-promise": "^4.2.1",
+        "eslint-plugin-standard": "^4.0.2"
+    }
 }
