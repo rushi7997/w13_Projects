@@ -29,6 +29,8 @@ function DisplayFiles() {
     // display only when both files are loaded
     if (file1Loaded && file2Loaded) {
         console.log(file1Content + file2Content);
+    }else{
+        console.log('not Ready yet \n');
     }
 }
 
