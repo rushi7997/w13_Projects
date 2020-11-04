@@ -1,21 +1,20 @@
-// {
-//     "extends": "standard",
+{
+    "extends": "standard",
 
-//     "rules": {
-//         "indent": ["error", 4]
-//     },
+    "rules": {
+        "indent": ["error", 4],
+        "beforeStatementContinuationChars": "always"
+    },
 
-//     "overrides": [
-//         {
-//             "files": ["**/*.js"]
-//         }
-//     ],
+    "overrides": [
+        {
+            "files": ["**/*.js"]
+        }
+    ],
 
-//     "env": {
-//         "browser": true,
-
-//         "node": true,
-
-//         "es6": true
-//     }
-// }
+    "env": {
+        "browser": true,
+        "node": true,
+        "es6": true
+    }
+}
