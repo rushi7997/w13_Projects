@@ -16,6 +16,7 @@ fs.readFile("some_file.txt", "utf8", (err, fileContent) => {
     file1Loaded = true;
     file1Content = fileContent;
     DisplayFiles(); // see below
+    logfile("read file some_file.txt ");
 });
 
 fs.readFile("other_file.txt", "utf8", (err, fileContent) => {
@@ -23,6 +24,7 @@ fs.readFile("other_file.txt", "utf8", (err, fileContent) => {
     file2Loaded = true;
     file2Content = fileContent;
     DisplayFiles(); // see below
+    logfile("read file other_file.txt ");
 });
 
 function DisplayFiles() {
@@ -30,8 +32,12 @@ function DisplayFiles() {
     if (file1Loaded && file2Loaded) {
         console.log(file1Content + file2Content);
     }else{
-        console.log('not Ready yet \n');
+        logfile("Error Reading File ")
     }
+}
+
+const logfile = (event) => {
+    fs.appendFile('./logs/log.txt', "Server state: "+ event + " \n","utf8",()=>{});
 }
 
 // this will be displayed first while waiting for files to be loaded

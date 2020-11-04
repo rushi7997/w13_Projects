@@ -1,0 +1,3 @@
+Server state: Error Reading File  
+Server state: read file some_file.txt  
+Server state: read file other_file.txt  
