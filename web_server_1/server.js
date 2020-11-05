@@ -14,7 +14,7 @@ app.get('/', async(req, res) => {
     }
 });
 
-app.post('/login', (request, response) => {
+app.post('/login', async(request, response) => {
     try{
         // console.log(request.body);
         const username = request.body.username;
