@@ -1,3 +1,5 @@
+'use strict';
+
 const { request, response } = require('express');
 let express = require('express');
 let app = express();
