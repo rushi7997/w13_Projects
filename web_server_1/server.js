@@ -1,8 +1,8 @@
 'use strict';
 
-const { request, response } = require('express');
-let express = require('express');
-let app = express();
+// const { request, response } = require('express');
+let express = require('express'); // to use express framework // npm
+let app = express(); // initialization of express
 const path = require('path');
 
 app.use(express.static('public_html'));
@@ -37,7 +37,6 @@ app.post('/login', async (request, response) => {
 })
 
 app.get('/chair', (request, response) => {
-    // console.log(path.join(__dirname));
     response.sendFile(path.join(__dirname, 'public_html', 'chairResponse.html'));
 })
 
