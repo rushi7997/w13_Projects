@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title><%= title %></title>
+    <meta name="description" content="<%=description%>">
+    <meta name="author" content="<%=author%>">
+    <!-- styles -->
+    <link href="/css/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+</head>
+
+<body>
+<header>This is the header - same for all pages</header>
+<ul class="nav">
+    <li class="nav-item">
+        <a class="nav-link" href="http://localhost:8000/page1.html">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="http://localhost:8000/chairResponse.html">Chair</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="http://localhost:8000/form.html">Form</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="http://localhost:8000/seasons">Seasons</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="http://localhost:8000/products">Products</a>
+    </li>
+</ul>
+<p>Below is dynamic content - different from page to page</p>
+<div class="content"><%- content %></div>
+<footer>This is the footer - same for all pages</footer>
+</body>
+
+</html>

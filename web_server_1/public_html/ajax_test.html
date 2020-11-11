@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html lang="en-CA">
+
+
+<head>
+
+    <title>AJAX test web page</title>
+
+</head>
+
+
+<body>
+
+AJAX test web page<br>
+
+<button onclick="getCustomersFetch()">Get all customers via GET fetch</button>
+<br>
+
+<button onclick="loginFetch()">Login via POST fetch</button>
+<br>
+
+<button onclick="CustomerDeleteFetch()">Delete customers via DELETE fetch</button>
+<br>
+
+<br>
+
+<button id="some_button">Get all customers via GET JQuery</button>
+<br>
+
+<button id="login_button">Login via POST JQuery</button>
+<br>
+
+<button id="delete_button">Delete 1 customer via DELETE JQuery</button>
+<br>
+
+<button id="Employee">get all employees</button>
+<br>
+
+Status: <b><span id="status">Click a button above</span></b></span><br>
+
+Server response:
+<div id="response"> None</div>
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    const getEmployees = () => {
+        fetch("http://localhost:8000/employees", {method: 'GET'}).then(res => res.json()).then((data) => {
+                // console.log(data);
+                let employees = data.employees;
+                document.getElementById("status").innerHTML = "Number of Employees:" + employees.length;
+                console.log(employees);
+            }
+        )
+    }
+
+    $('#Employee').click(() => {
+        getEmployees();
+    });
+
+    /* FETCH *************************************************************************************/
+
+    function getCustomersFetch() {
+        fetch("http://localhost:8000/customers",
+            {
+                method: 'GET',
+            }
+        )
+            .then(res => res.json())//here server sends JSON response
+            .then(
+                (response) => {
+                    // TO DO how to handle code other than 200 because this gets
+                    // exeucted in all cases
+                    let customers = response.customers;
+                    document.getElementById("status").innerHTML = "Number of customers:" + customers.length
+                    console.log(customers)
+                },
+                (error) => {
+                    // only NO RESPONSE URL errors will trigger this code
+                    document.getElementById("status").innerHTML = "AJAX error: URL wrong or unreachable, see console"
+                }
+            )
+    }// end of getCustomers function
+    function loginFetch() {
+        let userData = {
+            username: "toto",
+            password: "12345678"
+        }
+        fetch("http://localhost:8000/form_validate",
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                redirect: 'follow', // manual, *follow, error
+                referrerPolicy: 'no-referrer', // no-referrer, *client
+                body: JSON.stringify(userData)
+            }
+        )
+            .then(
+                (response) => {
+                    // here reponse is the full fetch response object
+                    console.log(response)
+                    // Any response, all error code 200, 404, … will execute this code (not like Jquery)
+                    if (response.status === 200) {
+                        // handle 200 success only
+                        document.getElementById("status").innerHTML = "AJAX response OK !"
+                        console.log(response.text())
+                    } else {
+                        document.getElementById("status").innerHTML = "Error: server returned error code: " + response.status
+                    }
+                },
+                (error) => {
+                    // only NO RESPONSE URL errors will trigger this code
+                    console.log(error)
+                    document.getElementById("status").innerHTML = "AJAX error: URL wrong or unreachable, see console"
+                }
+            )
+    }//end of login function
+    function CustomerDeleteFetch() {
+        fetch("http://localhost:8000/customers/465",
+            {
+
+                method: 'DELETE'
+
+                //,body: JSON.stringify(someData)// data to send in the body of the request
+
+            }
+        )
+
+            .then(res => res.text())// here server sends text/html response
+
+            .then(
+                (response) => {
+
+                    // TO DO how to handle code other than 200 because this gets
+
+                    // exeucted in all cases
+
+                    document.getElementById("status").innerHTML = response
+
+                },
+
+                (error) => {
+
+                    // only NO RESPONSE URL errors will trigger this code
+
+                    document.getElementById("status").innerHTML = "AJAX error: URL wrong or unreachable, see console"
+
+                }
+            )
+
+    }// end of CustomerDeleteFetch() function
+
+
+    /* JQUERY ************************************************************************************/
+
+    // handles all JQuery AJAX errors, any response code other than 2xx
+
+    $(document).ajaxError(function (event, xhr, options, exc) {
+
+        $("#status").html("An AJAX error occurred: " + xhr.status + " " + xhr.text_status);
+
+    });
+
+
+    $("#some_button").click(
+        function () {
+
+            // using the Jquery $.get function for AJAX call
+
+            $.get(
+                // web server URL to call
+
+                "/customers",
+
+                // callback function to execute after server response is received
+
+                function (returned_data, text_status, xhr) {
+
+                    // here only ok response code 2xx will trigger this code
+
+                    // data object received from server
+
+                    console.log(returned_data)
+
+                    let customers = returned_data.customers
+
+                    console.log(customers)
+
+                    $("#status").html("Number of customers: " + customers.length)
+
+                }
+            );
+
+        }
+    );
+
+
+    $("#login_button").click(function () {
+
+        $.post(
+            // server URL where to send the data
+
+            "/form_validate",
+
+            // data to send
+
+            {
+
+                username: "toto",
+
+                password: "12345678"
+
+            },
+
+            // callback function to execute after the response is received
+
+            function (data, status, xhr) {
+
+                $("#status").html("AJAX response OK !")
+
+                alert("Data: " + data + "\nStatus: " + status);
+
+            }
+        );
+
+    });
+
+
+    $("#delete_button").click(function () {
+
+        $.ajax({
+
+            url: "/customers/481",
+
+            type: "DELETE",
+
+            data: {},// data to send in the body of the request
+
+            success: function (result) {
+
+                // OK code 2xx display the returned message
+
+                $("#status").html("AJAX response:" + result)
+
+            },
+
+            error: function (xhr, textStatus, errorThrown) {
+
+                // will not be executed if .ajaxError above catches all errors before this
+
+                // any error code returned other than 2xx
+
+                // example display response code in a status div
+
+                $("#status").html(xhr.status)
+
+                $("#status").html(xhr.responseText)//if server returns text/html
+
+                // example append "message" property from a JSON object returned by our API
+
+                //$("#status").append(xhr.responseJSON.message) // if server returns JSON
+
+            }
+
+        });
+
+    });
+
+</script>
+
+</html>

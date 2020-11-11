@@ -1,0 +1,10 @@
+header, footer{
+    background-color: black;
+    color: white;
+}
+nav{
+    background-color: blue;
+}
+table, tr, td{
+    border: 1px solid black;
+}
