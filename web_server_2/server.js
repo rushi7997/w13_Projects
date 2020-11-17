@@ -4,6 +4,7 @@ let express = require('express');
 let app = express();
 const cors = require('cors');
 const logger = require('morgan');
+
 app.use(cors());
 app.use(express.urlencoded());
 app.use(express.json());

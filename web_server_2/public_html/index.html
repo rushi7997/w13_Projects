@@ -42,9 +42,10 @@
 <script>
     const deleteLi = (element) => {
         $.ajax({
-            url: 'localhost:8000/offices/' + element.target.id,
+            url: 'http://localhost:8000/offices/' + element.target.id,
             type: 'DELETE',
-            success: function (result) {
+            success:  (result) => {
+                console.log(result);
             }
         });
     }
