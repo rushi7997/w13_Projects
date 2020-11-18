@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 
 import Header from './Components/Header';
 import Footer from './Components/Footer';
+import SelectList from './Components/SelectList';
 
 const NameComp = (props) => {
     const [state, setState] = useState(props.name);
@@ -24,15 +25,21 @@ const NameComp = (props) => {
 }
 
 
-class Page extends React.Component {
-    render() {
-        return (
+const provinces=[ {'code':'QC','name':'Quebec'},{'code':'ON','name':'Ontario'},{'code':'NB','name':'New-Brunswick'}]
+
+const countries=[{'code':'CA','name':'Canada'},{'code':'US','name':'USA'},{'code':'IN','name':'India'},{'code':'MX','name':'Mexixo'}]
+
+class Page extends React.Component{
+  render(){
+            return (
             <div>
-                <Header company='BlaBla.com'/>
-                <NameComp name = 'Rushi'/>
-                <Footer footer='footer'/>
+                <Header companyName="blabla.com"/>
+                <p>Hello World !</p>
+                <SelectList array={provinces}/>
+                 <SelectList array={countries}/>
+                <Footer authorName="Stéphane Lapointe"/>
             </div>
-        );
+        )
     }
 }
 
