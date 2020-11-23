@@ -22,15 +22,14 @@ class Offices extends React.Component {
             },
             selectedOfficeCode: -1,
             message: "",
-
         };
     }
 
     componentDidMount() {
-        this.getAllOfficesOrByID(null);
+        this.getAll(null);
     }
 
-    getAllOfficesOrByID(officecode) {
+    getAll(officecode){
         let URL = 'http://localhost:8000/offices';
         if (officecode) {
             URL += `/${officecode}`
@@ -78,7 +77,7 @@ class Offices extends React.Component {
                                 offices_count: 0,
                                 offices_index: 0
                             });
-                            this.clearAllValues();
+                            this.clearAll();
                         })
                     }
                 },
@@ -120,7 +119,7 @@ class Offices extends React.Component {
                     // TO DO how to handle code other than 200 because this gets
                     // exeucted in all cases
                     this.renderMessage(response.message, 2000);
-                    this.getAllOfficesOrByID(null);
+                    this.getAll(null);
                 },
 
                 (error) => {
@@ -133,7 +132,7 @@ class Offices extends React.Component {
             )
     }
 
-    removeOfficeByID() {
+    removeOffice() {
         let {selectedOfficeCode} = this.state;
         fetch('http://localhost:8000/offices/' + selectedOfficeCode, {
             method: 'DELETE',
@@ -142,11 +141,11 @@ class Offices extends React.Component {
             .then(res => {
                 console.log(res)
                 this.renderMessage(res.message, 4000);
-                this.getAllOfficesOrByID(null);
+                this.getAll(null);
             })
     }
 
-    clearAllValues() {
+    clearAll() {
         this.setState({
             currentOfficeObject: {
                 officecode: 0,
@@ -177,7 +176,7 @@ class Offices extends React.Component {
                 selectedOfficeCode: prev.offices_data[currentIndex].officecode
             }
         }, () => {
-            this.getAllOfficesOrByID(this.state.selectedOfficeCode)
+            this.getAll(this.state.selectedOfficeCode)
         })
     }
 
@@ -338,12 +337,12 @@ class Offices extends React.Component {
                                 Add +
                             </button>
                             <button className="btn btn-danger" style={{margin: 10 + 'px'}} onClick={() => {
-                                this.removeOfficeByID();
+                                this.removeOffice();
                             }}>
                                 Delete
                             </button>
                             <button className="btn btn-info" style={{margin: 10 + 'px'}} onClick={() => {
-                                this.clearAllValues()
+                                this.clearAll()
                             }}>
                                 Clear
                             </button>
@@ -388,8 +387,8 @@ class Offices extends React.Component {
                 </div>
                 <div className="row">
                     <div className="col-md-12">
-                        <table className="table table-bordered table-striped table-hover">
-                            <thead className="thead-dark">
+                        <table className="table">
+                            <thead>
                             <tr>
                                 <th>Office Code</th>
                                 <th>City</th>
