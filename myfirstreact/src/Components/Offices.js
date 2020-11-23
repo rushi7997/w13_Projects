@@ -3,16 +3,13 @@ import React from 'react';
 class Offices extends React.Component {
     constructor(props) {
         super(props);
-
-        // set initial state
-        // do not use setState in constructor, write state directly
         this.state = {
             offices_data: [], // will contain offices data array from server
             offices_index: 0, // the index of the offices currently shown, start at first in array
             offices_count: 0, // how many offices in data array from server
             isLoaded: false,  // will be true after data have been received from server
             error: null,       // no errors yet !
-            officeObject: {
+            currentOfficeObject: {
                 officecode: 0,
                 city: "",
                 phone: "",
@@ -41,12 +38,7 @@ class Offices extends React.Component {
         fetch(URL)
             .then(
                 (response) => {
-                    // here full fetch response object
-                    //console.log(response)
-                    // fetch not like jQuery ! both ok code 200 and error code 404 will execute this .then code
                     if (response.ok) {
-                        // handle 2xx code success only
-                        // get only JSON data returned from server with .json()
                         response.json().then(json_response => {
                                 console.log(json_response)
                                 if (!officecode) {
@@ -56,13 +48,13 @@ class Offices extends React.Component {
                                         offices_index: 0,  // will first show the first offices in the array
                                         isLoaded: true,  // we got data
                                         error: null, // no errors
-                                        officeObject: json_response.offices[0],
+                                        currentOfficeObject: json_response.offices[0],
                                         selectedOfficeCode: parseInt(json_response.offices[0].officecode)
                                     })
                                 } else {
                                     if (json_response.offices.length > 0) {
                                         this.setState({
-                                            officeObject: json_response.offices[0],
+                                            currentOfficeObject: json_response.offices[0],
                                             selectedOfficeCode: parseInt(json_response.offices[0].officecode)
                                         })
                                     } else {
@@ -81,8 +73,6 @@ class Offices extends React.Component {
                         response.json().then(json_response => {
                             this.setState({
                                 isLoaded: false,
-                                // result returned is case of error is like  {message: "offices not found"}
-                                // save the error in state for display below
                                 error: json_response,   // something in format  {message: "offices not found", db_data:{}}
                                 offices_data: {}, // no data received from server
                                 offices_count: 0,
@@ -94,8 +84,6 @@ class Offices extends React.Component {
                 },
 
                 (error) => {
-                    // Basically fetch() will only reject a promise if the URL is wrong, the user is offline,
-                    // or some unlikely networking error occurs, such a DNS lookup failure.
                     this.setState({
                         isLoaded: false,
                         error: {message: "AJAX error, URL wrong or unreachable, see console"}, // save the AJAX error in state for display below
@@ -107,14 +95,8 @@ class Offices extends React.Component {
             )
     }
 
-
-    // addNewOffice(){
-    //     let {officeObject} = this.state;
-    //
-    // }
-
-    addUpdateOfficeData() {
-        let {selectedOfficeCode, officeObject} = this.state;
+    addOrUpdateOfficeData() {
+        let {selectedOfficeCode, currentOfficeObject} = this.state;
         let typeOfRequest = "POST", URL = "http://localhost:8000/offices";
         if (selectedOfficeCode !== -1) {
             URL += `/${selectedOfficeCode}`;
@@ -129,7 +111,7 @@ class Offices extends React.Component {
                 },
                 redirect: 'follow', // manual, *follow, error
                 referrerPolicy: 'no-referrer', // no-referrer, *client
-                body: JSON.stringify(officeObject)
+                body: JSON.stringify(currentOfficeObject)
             }
         )
             .then(res => res.json())//here server sends JSON response
@@ -137,7 +119,7 @@ class Offices extends React.Component {
                 (response) => {
                     // TO DO how to handle code other than 200 because this gets
                     // exeucted in all cases
-                    this.showMessage(response.message, 2000);
+                    this.renderMessage(response.message, 2000);
                     this.getAllOfficesOrByID(null);
                 },
 
@@ -151,7 +133,7 @@ class Offices extends React.Component {
             )
     }
 
-    deleteOfficeByID() {
+    removeOfficeByID() {
         let {selectedOfficeCode} = this.state;
         fetch('http://localhost:8000/offices/' + selectedOfficeCode, {
             method: 'DELETE',
@@ -159,14 +141,14 @@ class Offices extends React.Component {
             .then(res => res.json())
             .then(res => {
                 console.log(res)
-                this.showMessage(res.message, 4000);
+                this.renderMessage(res.message, 4000);
                 this.getAllOfficesOrByID(null);
             })
     }
 
     clearAllValues() {
         this.setState({
-            officeObject: {
+            currentOfficeObject: {
                 officecode: 0,
                 city: "",
                 phone: "",
@@ -199,7 +181,7 @@ class Offices extends React.Component {
         })
     }
 
-    showMessage(msg, timeOutInMilliSeconds) {
+    renderMessage(msg, timeOutInMilliSeconds) {
         this.setState({
             message: msg,
         }, () => {
@@ -212,17 +194,17 @@ class Offices extends React.Component {
     }
 
     onInputValueChange(e) {
-        let {officeObject} = this.state;
-        officeObject[e.target.id] = e.target.value;
+        let {currentOfficeObject} = this.state;
+        currentOfficeObject[e.target.id] = e.target.value;
         this.setState({
-            officeObject: officeObject
+            currentOfficeObject: currentOfficeObject
         }, () => {
             console.log(this.state);
         })
     }
 
     renderOfficeTable() {
-        let {error, isLoaded, offices_count, officeObject, offices_index, message, selectedOfficeCode} = this.state;
+        let {error, isLoaded, offices_count, currentOfficeObject, offices_index, message, selectedOfficeCode} = this.state;
         if (this.state.error) {
             return <div><b>{error.message}</b></div>;
         } else if (isLoaded) {
@@ -230,20 +212,13 @@ class Offices extends React.Component {
                 // offices table not empty
                 return (
                     <div>
-                        <div className="row mt-2">
-                            <div className="col-md-12">
-                                <code>List of offices from server <a href="http://localhost:8000/offices"
-                                                                     target="_blank"
-                                                                     rel="noreferrer">http://localhost:8000/offices</a></code>
-                            </div>
-                        </div>
                         <div className="list-group">
                             <div className="list-group-item">
                                 <div className="form-group col-md-12">
                                     <label>Office Code</label>
                                     <input id="officecode" className="form-control" type="number" min="1"
                                            step="1"
-                                           value={officeObject.officecode ? officeObject.officecode : "0"}
+                                           value={currentOfficeObject.officecode ? currentOfficeObject.officecode : "0"}
                                            onChange={(e) => {
                                                if (selectedOfficeCode === -1) {
                                                    this.onInputValueChange(e);
@@ -255,7 +230,7 @@ class Offices extends React.Component {
                                 <div className="form-group col-md-12">
                                     <label>City</label>
                                     <input id="city" className="form-control" type="text"
-                                           value={officeObject.city ? officeObject.city : ""} onChange={(e) => {
+                                           value={currentOfficeObject.city ? currentOfficeObject.city : ""} onChange={(e) => {
                                         this.onInputValueChange(e);
                                     }}/>
                                 </div>
@@ -264,7 +239,7 @@ class Offices extends React.Component {
                                 <div className="form-group col-md-12">
                                     <label>Phone</label>
                                     <input id="phone" className="form-control" type="text"
-                                           value={officeObject.phone ? officeObject.phone : ""}
+                                           value={currentOfficeObject.phone ? currentOfficeObject.phone : ""}
                                            onChange={(e) => {
                                                this.onInputValueChange(e);
                                            }}/>
@@ -274,7 +249,7 @@ class Offices extends React.Component {
                                 <div className="form-group col-md-12">
                                     <label>Address Line 1</label>
                                     <textarea id="addressline1" className="form-control"
-                                              value={officeObject.addressline1 ? officeObject.addressline1 : ""}
+                                              value={currentOfficeObject.addressline1 ? currentOfficeObject.addressline1 : ""}
                                               onChange={(e) => {
                                                   this.onInputValueChange(e);
                                               }}>
@@ -285,7 +260,7 @@ class Offices extends React.Component {
                                 <div className="form-group col-md-12">
                                     <label>Address Line 2</label>
                                     <textarea id="addressline2" className="form-control"
-                                              value={officeObject.addressline2 ? officeObject.addressline2 : ""}
+                                              value={currentOfficeObject.addressline2 ? currentOfficeObject.addressline2 : ""}
                                               onChange={(e) => {
                                                   this.onInputValueChange(e);
                                               }}>
@@ -296,7 +271,7 @@ class Offices extends React.Component {
                                 <div className="form-group col-md-12">
                                     <label>State</label>
                                     <input id="state" className="form-control" type="text"
-                                           value={officeObject.state ? officeObject.state : ""}
+                                           value={currentOfficeObject.state ? currentOfficeObject.state : ""}
                                            onChange={(e) => {
                                                this.onInputValueChange(e);
                                            }}/>
@@ -306,7 +281,7 @@ class Offices extends React.Component {
                                 <div className="form-group col-md-12">
                                     <label>Country</label>
                                     <input id="country" className="form-control" type="text"
-                                           value={officeObject.country ? officeObject.country : ""}
+                                           value={currentOfficeObject.country ? currentOfficeObject.country : ""}
                                            onChange={(e) => {
                                                this.onInputValueChange(e);
                                            }}/>
@@ -317,7 +292,7 @@ class Offices extends React.Component {
                                     <label>Postal Code</label>
                                     <input id="postalcode" className="form-control"
                                            type="text"
-                                           value={officeObject.postalcode ? officeObject.postalcode : ""}
+                                           value={currentOfficeObject.postalcode ? currentOfficeObject.postalcode : ""}
                                            onChange={(e) => {
                                                this.onInputValueChange(e);
                                            }}/>
@@ -327,7 +302,7 @@ class Offices extends React.Component {
                                 <div className="form-group col-md-12">
                                     <label>Territory</label>
                                     <input id="territory" className="form-control" type="text"
-                                           value={officeObject.territory ? officeObject.territory : ""}
+                                           value={currentOfficeObject.territory ? currentOfficeObject.territory : ""}
                                            onChange={(e) => {
                                                this.onInputValueChange(e);
                                            }}/>
@@ -353,17 +328,17 @@ class Offices extends React.Component {
                                     }} disabled={offices_index === offices_count - 1}>Next
                             </button>
                             <button className="btn btn-warning" style={{margin: 10 + 'px'}} onClick={() => {
-                                this.addUpdateOfficeData()
+                                this.addOrUpdateOfficeData()
                             }}>
                                 Save
                             </button>
                             <button className="btn btn-success" style={{margin: 10 + 'px'}} onClick={() => {
-                                // this.addUpdateOfficeData()
+                                this.addOrUpdateOfficeData()
                             }}>
                                 Add +
                             </button>
                             <button className="btn btn-danger" style={{margin: 10 + 'px'}} onClick={() => {
-                                this.deleteOfficeByID();
+                                this.removeOfficeByID();
                             }}>
                                 Delete
                             </button>
@@ -404,13 +379,12 @@ class Offices extends React.Component {
             <td colSpan="9" className="text-center">No data available</td>
         </tr>)
     }
-
     // display the offices table
     render() {
         return (
             <div className="container">
                 <div className="col-md-12">
-                    {this.renderOfficeTable()}
+                        {this.renderOfficeTable()}
                 </div>
                 <div className="row">
                     <div className="col-md-12">

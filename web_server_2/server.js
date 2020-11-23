@@ -6,6 +6,7 @@ const app = express()
 // const bodyParser = require('body-parser')
 // const path = require('path')
 const cors = require('cors')
+const logger = require('morgan')
 
 app.use(express.static('public_html'))
 
@@ -15,6 +16,7 @@ app.use(cors())
 // support parsing of application/json type post data
 // app.use(bodyParser.json())
 app.use(express.json())
+app.use(logger('dev'));
 
 // support parsing of application/x-www-form-urlencoded post data
 // app.use(bodyParser.urlencoded({
@@ -59,12 +61,10 @@ app.get('/offices/:id', function (request, response) {
             offices: offices.rows
         }
         const officesJSONString = JSON.stringify(officesJSON, null, 4)
-        // set content type
         response.writeHead(200, {
             'Content-Type': 'application/json'
         })
         DB.disconnect()
-        // send out a string
         response.end(officesJSONString)
     })
 })
