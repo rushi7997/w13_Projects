@@ -4,7 +4,7 @@ const SelectList = (props) => {
     return (
         <div>
             <select name='Country'>
-                {props.array.map((obj, i) => <option value={obj['code']}> {obj['name']} </option>)}
+                {props.array.map((obj, i) => <option value={obj['code']} key={obj['code']}> {obj['name']} </option>)}
             </select>
         </div>
     );

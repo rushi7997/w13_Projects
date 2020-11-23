@@ -5,8 +5,10 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import Header from './Components/Header';
-import Footer from './Components/Footer';
+// import Footer from './Components/Footer';
 import SelectList from './Components/SelectList';
+// import ClickCounter from "./Components/ClickCounter";
+import Offices from './Components/Offices';
 
 const NameComp = (props) => {
     const [state, setState] = useState(props.name);
@@ -37,7 +39,9 @@ class Page extends React.Component{
                 <p>Hello World !</p>
                 <SelectList array={provinces}/>
                  <SelectList array={countries}/>
-                <Footer authorName="Stéphane Lapointe"/>
+                 <Offices />
+                {/*<Footer authorName="Stéphane Lapointe"/>*/}
+                {/*<ClickCounter />*/}
             </div>
         )
     }
