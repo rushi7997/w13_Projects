@@ -15,7 +15,7 @@ app.use(express.urlencoded({
     extended: true
 }))
 
-// GET /tracks TODO
+// GET /tracks
 app.get('/tracks', async (request, response) => {
     const DB = require('./src/dao');
     DB.connect();
@@ -33,7 +33,7 @@ app.get('/tracks', async (request, response) => {
     });
 });
 
-// DELETE /tracks/123 TODO
+// DELETE /tracks/123
 app.delete('/tracks/:id', (request, response) => {
     const id = request.params.id;
     const DB = require('./src/dao');
@@ -51,7 +51,7 @@ app.delete('/tracks/:id', (request, response) => {
     });
 });
 
-//POST /tracks TODO
+//POST /tracks
 app.post('/tracks', (request, response) => {
     const DB = require('./src/dao');
     const trackData = {
@@ -77,6 +77,24 @@ app.post('/tracks', (request, response) => {
         }, null, 4);
         DB.disconnect();
         response.end(officesJSONString);
+    });
+});
+
+// GET /playlist
+app.get('/playlist', async (request, response) => {
+    const DB = require('./src/dao');
+    DB.connect();
+
+    await DB.query('SELECT * from playlist order by id asc', (playlist) => {
+        const playlistJSON = {
+            playlist: playlist.rows
+        };
+        const playlistJSONString = JSON.stringify(playlistJSON, null, 4);
+        response.writeHead(200, {
+            'Content-Type': 'application/json'
+        });
+        DB.disconnect();
+        response.end(playlistJSONString);
     });
 });
 

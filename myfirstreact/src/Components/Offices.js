@@ -402,7 +402,6 @@ class Offices extends React.Component {
                     {this.renderOfficeTable()}
                 </div>
             </div>
-
         )
     }
 }
