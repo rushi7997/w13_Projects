@@ -4,11 +4,11 @@ class Offices extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            offices_data: [], // will contain offices data array from server
-            offices_index: 0, // the index of the offices currently shown, start at first in array
-            offices_count: 0, // how many offices in data array from server
-            isLoaded: false,  // will be true after data have been received from server
-            error: null,       // no errors yet !
+            offices_data: [],
+            offices_index: 0,
+            offices_count: 0,
+            isLoaded: false,
+            error: null,
             currentOfficeObject: {
                 officecode: 0,
                 city: "",
@@ -42,11 +42,11 @@ class Offices extends React.Component {
                                 console.log(json_response)
                                 if (!officecode) {
                                     this.setState({
-                                        offices_data: json_response.offices, // data received from server
-                                        offices_count: json_response.offices.length, // how many offices in array
-                                        offices_index: 0,  // will first show the first offices in the array
-                                        isLoaded: true,  // we got data
-                                        error: null, // no errors
+                                        offices_data: json_response.offices,
+                                        offices_count: json_response.offices.length,
+                                        offices_index: 0,
+                                        isLoaded: true,
+                                        error: null,
                                         currentOfficeObject: json_response.offices[0],
                                         selectedOfficeCode: parseInt(json_response.offices[0].officecode)
                                     })
@@ -72,8 +72,8 @@ class Offices extends React.Component {
                         response.json().then(json_response => {
                             this.setState({
                                 isLoaded: false,
-                                error: json_response,   // something in format  {message: "offices not found", db_data:{}}
-                                offices_data: {}, // no data received from server
+                                error: json_response,
+                                offices_data: {},
                                 offices_count: 0,
                                 offices_index: 0
                             });
@@ -85,8 +85,8 @@ class Offices extends React.Component {
                 (error) => {
                     this.setState({
                         isLoaded: false,
-                        error: {message: "AJAX error, URL wrong or unreachable, see console"}, // save the AJAX error in state for display below
-                        offices_data: {}, // no data received from server
+                        error: {message: "AJAX error, URL wrong or unreachable, see console"},
+                        offices_data: {},
                         offices_count: 0,
                         offices_index: 0,
                     });
@@ -106,24 +106,20 @@ class Offices extends React.Component {
                 method: typeOfRequest,
                 headers: {
                     'Content-Type': 'application/json'
-                    //'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                redirect: 'follow', // manual, *follow, error
-                referrerPolicy: 'no-referrer', // no-referrer, *client
+                redirect: 'follow',
+                referrerPolicy: 'no-referrer',
                 body: JSON.stringify(currentOfficeObject)
             }
         )
-            .then(res => res.json())//here server sends JSON response
+            .then(res => res.json())
             .then(
                 (response) => {
-                    // TO DO how to handle code other than 200 because this gets
-                    // exeucted in all cases
                     this.renderMessage(response.message, 2000);
                     this.getAll(null);
                 },
 
                 (error) => {
-                    // only NO RESPONSE URL errors will trigger this code
                     this.setState({
                         error: {message: "AJAX error, URL wrong or unreachable, see console"}
                     })
@@ -208,7 +204,6 @@ class Offices extends React.Component {
             return <div><b>{error.message}</b></div>;
         } else if (isLoaded) {
             if (offices_count !== 0) {
-                // offices table not empty
                 return (
                     <div>
                         <div className="list-group">
@@ -316,16 +311,6 @@ class Offices extends React.Component {
                             </div>) : <div></div>}
                         </div>
                         <div className="container d-flex flex-row">
-                            <button className="btn btn-primary" style={{margin: 10 + 'px'}} type="button"
-                                    onClick={() => {
-                                        this.nextPrevBtnClick("previous");
-                                    }} disabled={offices_index === 0}>Previous
-                            </button>
-                            <button className="btn btn-primary" style={{margin: 10 + 'px'}} type="button"
-                                    onClick={() => {
-                                        this.nextPrevBtnClick("next");
-                                    }} disabled={offices_index === offices_count - 1}>Next
-                            </button>
                             <button className="btn btn-warning" style={{margin: 10 + 'px'}} onClick={() => {
                                 this.addOrUpdateOfficeData()
                             }}>
@@ -345,6 +330,16 @@ class Offices extends React.Component {
                                 this.clearAll()
                             }}>
                                 Clear
+                            </button>
+                            <button className="btn btn-primary" style={{margin: 10 + 'px'}} type="button"
+                                    onClick={() => {
+                                        this.nextPrevBtnClick("previous");
+                                    }} disabled={offices_index === 0}>Previous
+                            </button>
+                            <button className="btn btn-primary" style={{margin: 10 + 'px'}} type="button"
+                                    onClick={() => {
+                                        this.nextPrevBtnClick("next");
+                                    }} disabled={offices_index === offices_count - 1}>Next
                             </button>
                         </div>
                     </div>
@@ -378,13 +373,9 @@ class Offices extends React.Component {
             <td colSpan="9" className="text-center">No data available</td>
         </tr>)
     }
-    // display the offices table
     render() {
         return (
             <div className="container">
-                <div className="col-md-12">
-                        {this.renderOfficeTable()}
-                </div>
                 <div className="row">
                     <div className="col-md-12">
                         <table className="table">
@@ -407,11 +398,12 @@ class Offices extends React.Component {
                         </table>
                     </div>
                 </div>
-
+                <div className="col-md-12">
+                    {this.renderOfficeTable()}
+                </div>
             </div>
 
         )
     }
 }
-
 export default Offices;
