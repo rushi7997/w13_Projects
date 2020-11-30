@@ -7,7 +7,10 @@ class Discogs extends React.Component {
             discogs_data: [],
             isLoaded: false,
             error: null,
-            search_str: ""
+            search_str: "",
+            playLists: [],
+            count: props.count,
+            setCount: props.setCount
         }
     }
 
@@ -24,17 +27,37 @@ class Discogs extends React.Component {
                             discogs_data: json_response.results,
                             isLoaded: true
                         })
+                        console.log(this.state);
                     })
                 });
         }
+        let playListURL = "http://localhost:3001/playlist";
+        fetch(playListURL)
+            .then((response) => {
+                if (response.ok) {
+                    response.json().then(json_response => {
+                        console.log("Playlists Loaded");
+                        this.setState({
+                            playLists: json_response.playlist
+                        })
+                    });
+                } else {
+                    response.json().then(json_response => {
+                        this.setState({
+                            error: json_response
+                        });
+                    })
+                }
+            });
     }
 
-    addToDefaultPlaylist = (event) => {
-        let {discogs_data} = this.state;
+    addToPlaylist = (event) => {
+        let {discogs_data, setCount} = this.state;
         let track = discogs_data.find(element => element.id === parseInt(event.target.id))
+        let playListId = document.getElementById('select-'+event.target.id).value;
         let extractedData = {
             id: track.id,
-            playlist_id: 1,
+            playlist_id: playListId,
             title: track.title,
             uri: track.uri,
             master_id: track.master_id
@@ -58,6 +81,7 @@ class Discogs extends React.Component {
                     })
                     console.error(error);
                 });
+        setCount(this.state.count + 1);
     }
 
     onSearchChange = (event) => {
@@ -69,10 +93,10 @@ class Discogs extends React.Component {
     }
 
     renderDiscogsData = () => {
-        let {discogs_data, isLoaded} = this.state;
+        let {discogs_data, isLoaded, playLists} = this.state;
         const jumbotronStyle = {
             height: 800 + 'px',
-            overflow: 'scroll'
+            overflow: 'scroll',
         }
         const cardStyle = {
             width: 15 + 'rem',
@@ -87,10 +111,15 @@ class Discogs extends React.Component {
                                 <img src={item.cover_image} className="card-img-top" alt="cover"/>
                                 <div className="card-body">
                                     <h5 className="card-title">{item.title}</h5>
-                                    <div className="d-flex flex-row">
-                                        <a href={"http://www.discogs.com" + item.uri} target="_blank" rel="noreferrer"
-                                           className="btn btn-sm btn-outline-info">Find More</a>
-                                        <button onClick={(event) => this.addToDefaultPlaylist(event)} id={item.id}
+                                    <a href={"http://www.discogs.com" + item.uri} target="_blank" rel="noreferrer"
+                                       className="btn btn-sm btn-outline-info">Find More</a>
+                                    <div className="form-group">
+                                        <select className="form-control" id={"select-"+item.id}>
+                                            {playLists.map((playlist, playListIndex) =>
+                                                <option key={playListIndex}
+                                                        value={playlist.id}>{playlist.title}</option>)}
+                                        </select>
+                                        <button onClick={(event) => this.addToPlaylist(event)} id={item.id}
                                                 className="btn btn-sm btn-outline-success">Add
                                         </button>
                                     </div>

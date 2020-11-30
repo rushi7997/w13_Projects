@@ -28,7 +28,7 @@ app.get('/tracks', async (request, response) => {
         response.writeHead(200, {
             'Content-Type': 'application/json'
         });
-        DB.disconnect();
+        // DB.disconnect();
         response.end(tracksJSONString);
     });
 });
@@ -39,7 +39,7 @@ app.delete('/tracks/:id', (request, response) => {
     const DB = require('./src/dao');
     DB.connect();
 
-    DB.queryParams('DELETE from offices WHERE officecode=$1', [id], () => {
+    DB.queryParams('DELETE from track WHERE id=$1', [id], () => {
         response.writeHead(200, {
             'Content-Type': 'text/json'
         });
@@ -93,7 +93,7 @@ app.get('/playlist', async (request, response) => {
         response.writeHead(200, {
             'Content-Type': 'application/json'
         });
-        DB.disconnect();
+        // DB.disconnect();
         response.end(playlistJSONString);
     });
 });
