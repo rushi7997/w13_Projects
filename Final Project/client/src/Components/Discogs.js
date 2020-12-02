@@ -54,7 +54,7 @@ class Discogs extends React.Component {
     addToPlaylist = (event) => {
         let {discogs_data, setCount} = this.state;
         let track = discogs_data.find(element => element.id === parseInt(event.target.id))
-        let playListId = document.getElementById('select-'+event.target.id).value;
+        let playListId = document.getElementById('select-' + event.target.id).value;
         let extractedData = {
             id: track.id,
             playlist_id: playListId,
@@ -114,7 +114,7 @@ class Discogs extends React.Component {
                                     <a href={"http://www.discogs.com" + item.uri} target="_blank" rel="noreferrer"
                                        className="btn btn-sm btn-outline-info">Find More</a>
                                     <div className="form-group">
-                                        <select className="form-control" id={"select-"+item.id}>
+                                        <select className="form-control" id={"select-" + item.id}>
                                             {playLists.map((playlist, playListIndex) =>
                                                 <option key={playListIndex}
                                                         value={playlist.id}>{playlist.title}</option>)}
