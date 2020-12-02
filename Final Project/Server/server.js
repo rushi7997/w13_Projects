@@ -2,13 +2,13 @@
 const express = require('express');
 const app = express();
 
-const cors = require('cors')
-const logger = require('morgan')
+const cors = require('cors');
+const logger = require('morgan');
 
-app.use(express.static('public_html'))
-app.use(cors())
+app.use(express.static('public_html'));
+app.use(cors());
 
-app.use(express.json())
+app.use(express.json());
 app.use(logger('dev'));
 
 app.use(express.urlencoded({
